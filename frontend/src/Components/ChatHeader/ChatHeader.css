@@ -1,0 +1,30 @@
+.chat-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    height: 60px;
+
+    padding: 10px 16px;
+
+    background-color: #202c33;
+}
+
+.chat-header-img {
+    width: 40px;
+    height: 40px;
+
+    margin-right: 15px;
+
+    border-radius: 50%;
+}
+
+.chat-header-title {
+    color: white;
+    flex: 1;
+}
+
+.chat-header-ctrls {
+    width: 175px;
+    margin-left: 20px;
+}

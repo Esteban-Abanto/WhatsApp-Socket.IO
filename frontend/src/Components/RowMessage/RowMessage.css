@@ -1,0 +1,72 @@
+.row-message {
+    display: flex;
+    margin-bottom: 2px;
+    padding: 0px 63px;
+}
+
+.bubble-message {
+    display: inline-block;
+
+    color: white;
+    max-width: 65%;
+    padding: 6px 8px 8px 9px;
+    border-radius: 8.5px;
+}
+
+.sender {
+    display: inline-flex;
+    max-width: 100%;
+    font-size: 12.8px;
+    line-height: 22px;
+    font-weight: 500;
+    color: #53bdeb;
+}
+
+.sender > span {
+    min-height: 0px;
+    padding-left: 2px;
+    margin-left: -2px;
+    flex: 0 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.message {
+    display: block;
+    color: #e9edef;
+    position: relative;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.text {
+    min-height: 0px;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    color: #e9edef;
+}
+
+.extra {
+    display: inline-flex;
+    padding-right: 4px;
+    padding-left: 4px;
+    font-size: .6875rem;
+    visibility: hidden;
+    line-height: 15px;
+    height: 0;
+}
+
+.time {
+    position: relative;
+    float: right;
+    margin: -10px 0px -5px 4px;
+}
+
+.time > div {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: .6875rem;
+    align-items: center;
+    height: 15px;
+    line-height: 15px;
+}

@@ -11,8 +11,12 @@ const io = new SocketServer(server, {
     }
 })
 
+const connectedClients = new Map();
+
 io.on('connection', socket => {
-    console.log(socket.id);
+    
+    console.log(`Client connected: ${socket.id}`);
+    connectedClients.set(socket.id, socket.id);
     
     socket.on('message', (message) => {
 
@@ -20,6 +24,12 @@ io.on('connection', socket => {
             sender: socket.id.slice(6),
             message,
         });
+    });
+
+    
+    socket.on('disconnect', () => {
+        console.log(`Client disconnected: ${socket.id}`);
+        connectedClients.delete(socket.id);
     });
 })
 
