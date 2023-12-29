@@ -1,6 +1,8 @@
 
+import UserInfo from './UserInfo'
+
 interface Message {
-    sender?: string;
+    sender?: UserInfo;
     message: string;
 }
 

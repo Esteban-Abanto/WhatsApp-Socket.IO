@@ -1,28 +1,34 @@
 import { useState, useEffect } from 'react'
 import io from 'socket.io-client'
 
-import UserHeader from "./Components/UserHeader/UserHeader";
-import ChatFrame from "./Components/ChatFrame/ChatFrame";
-import ChatHeader from "./Components/ChatHeader/ChatHeader";
-import ChatMessages from "./Components/ChatMessages/ChatMessages";
-import ChatInputs from "./Components/ChatInputs/ChatInputs";
+import UserHeader from "./components/UserHeader";
+import ChatFrame from "./components/ChatFrame/ChatFrame";
+import ChatHeader from "./components/ChatHeader/ChatHeader";
+import ChatMessages from "./components/ChatMessages/ChatMessages";
+import ChatInputs from "./components/ChatInputs/ChatInputs";
 
 import Message from './interfaces/Message'
+import UserInfo from './interfaces/UserInfo'
 
 const socket = io("http://localhost:4000");
 
 function App() {
 
     const imageUrl = 'https://picsum.photos/100';
-
     const [messages, setMessages] = useState<Message[]>([]);
+
+    const handleSetUserInfo = (info: UserInfo) => {
+        socket.emit('updateUserInfo', info);
+    }
 
     const handleSendMessage = (message: string) => {
 
         const myMessage: Message = {
             message,
         };
+
         setMessages([...messages, myMessage]);
+
         socket.emit('message', message);
     };
 
@@ -42,12 +48,7 @@ function App() {
                 <div className="" style={{ width: "480px" }}>
                     <div className="d-flex flex-column w-100 h-100" style={{ width: "480px" }}>
 
-                        <UserHeader data={{ imgUrl: imageUrl, name: "Jesus Campos" }} />
-
-                        <div className="d-flex align-items-center flex-row" style={{ height: "50px", padding: "10px 16px" }}>
-                            <div style={{ height: "50px" }}> Busqueda </div>
-                        </div>
-
+                        <UserHeader onSetUserInfo={handleSetUserInfo} />
                         <div className="flex-fill overflow-auto">
                             <div id='ChatList' className="" style={{ minHeight: "100%" }}>
 

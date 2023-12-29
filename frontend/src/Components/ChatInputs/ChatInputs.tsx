@@ -31,11 +31,11 @@ function ChatInputs({ onSendMessage }: ChatInputsProps) {
             </div>
 
             <input
+                type="text"
                 className="form-control field-message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
-                type="text"
             />
 
             <button onClick={handleClick} type="submit" className="btn btn-primary btn-send">

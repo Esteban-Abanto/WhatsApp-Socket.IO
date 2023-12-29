@@ -2,12 +2,10 @@ import { CSSProperties } from "react";
 import "./RowMessage.css";
 
 import { getCurrentTime } from '../../utils/timeUtils'
+import Message from '../../interfaces/Message'
 
 interface MessageProps {
-    data: {
-        sender?: string;
-        message: string;
-    };
+    data: Message;
 }
 
 function RowMessage(props: MessageProps) {
@@ -23,7 +21,7 @@ function RowMessage(props: MessageProps) {
 
                 {sender && (
                     <div className="sender">
-                        <span>{sender}</span>
+                        <span>{sender.userName}</span>
                     </div>
                 )}
 
