@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react'
 
-import UserInfo from '../interfaces/UserInfo'
+import IUser from '../interfaces/IUser'
 import { generateRandomUserName } from "../utils/random";
 
 interface UserHeaderProps {
-    onSetUserInfo: (info: UserInfo) => void;
+    onSetUserInfo: (info: IUser) => void;
 }
 
 function UserHeader({ onSetUserInfo }: UserHeaderProps) {
 
-    const imgUrl = 'https://picsum.photos/40';
+    const imgUrl = 'https://picsum.photos/id/237/40';
 
     const [canEdit, setCanEdit] = useState(false);
     const [userName, setUserName] = useState(generateRandomUserName);
@@ -26,13 +26,15 @@ function UserHeader({ onSetUserInfo }: UserHeaderProps) {
 
     const handlerSaveName = () => {
 
-        if (!userName) {
+        if (userName.trim() === '') {
             alert("UserName can't be empty");
             setCanEdit(true);
             return;
         }
 
-        const info: UserInfo = {
+        setUserName(userName.trim());
+
+        const info: IUser = {
             userName: userName,
         };
 
@@ -43,12 +45,13 @@ function UserHeader({ onSetUserInfo }: UserHeaderProps) {
     return (
         <header className="bg-dark d-flex flex-row align-items-center px-3 py-2">
 
-            <img className="me-3 rounded-circle" src={imgUrl} alt="Img" />
+            <img className="me-3 rounded-circle" src={imgUrl} style={{ width: "40px" }} />
 
             <div className="input-group">
 
                 <input
                     type="text"
+                    name='user-name'
                     className="form-control"
                     placeholder="Username"
                     onChange={(e) => setUserName(e.target.value)}
@@ -59,15 +62,15 @@ function UserHeader({ onSetUserInfo }: UserHeaderProps) {
                 />
 
                 {!canEdit && (
-                    <span className="input-group-text btn btn-outline-secondary" role="button" onClick={() => { setCanEdit(true); }}>
+                    <button className="btn btn-outline-secondary" onClick={() => { setCanEdit(true); }}>
                         <i className="bi bi-pencil-square"></i>
-                    </span>
+                    </button>
                 )}
 
                 {canEdit && (
-                    <span className="input-group-text btn btn-outline-success" role="button" onClick={handlerSaveName}>
+                    <button className="btn btn-outline-secondary" onClick={handlerSaveName}>
                         <i className="bi bi-cloud-arrow-down"></i>
-                    </span>
+                    </button>
                 )}
 
             </div>

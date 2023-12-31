@@ -1,8 +1,8 @@
 
-interface UserInfo {
+interface IUser {
     ID?: string,
     userName: string,
     // imgUrl: string
 }
 
-export default UserInfo;
+export default IUser;

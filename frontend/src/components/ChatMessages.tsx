@@ -1,20 +1,22 @@
-import RowMessage from "../RowMessage/RowMessage";
+import RowMessage from "./RowMessage/RowMessage";
 
-import Message from '../../interfaces/Message'
+import IMessage from '../interfaces/IMessage'
 
 interface ChatMessagesProps {
-    messages: Message[];
+    messages: IMessage[];
+    onClickName: (userId: string) => void;
 }
 
-function ChatMessages({ messages }: ChatMessagesProps) {
+function ChatMessages({ messages, onClickName }: ChatMessagesProps) {
     return (
         <div className='flex-fill overflow-auto' style={{ backgroundColor: "#0c151b" }}>
             <div className='d-flex flex-column justify-content-end' style={{ minHeight: "100%" }}>
-                
-                {messages.map((data, index) => (
+
+                {messages.map((value, index) => (
                     <RowMessage
                         key={index}
-                        data={data}
+                        message={value}
+                        onClickName={onClickName}
                     />
                 ))}
             </div>

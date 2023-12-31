@@ -1,27 +1,26 @@
 import { useState } from 'react'
 
-import Message from '../../interfaces/Message'
+import { getCurrentTime } from '../../utils/timeUtils'
+
+import IChat from '../../interfaces/IChat'
 
 import "./ChatFrame.css";
 
-interface ChatData {
-    title: string,
-    messages: Message[]
-}
-
 interface ChatFrameProps {
-    onSetChat: (chat: ChatData) => void;
+    chatInfo: IChat;
+    onClickChat: (chatId: string) => void;
 }
 
-// function ChatFrame({ onSetChat }: ChatFrameProps) {
-function ChatFrame() {
+function ChatFrame({ chatInfo, onClickChat }: ChatFrameProps) {
 
-    const imageUrl = 'https://picsum.photos/50';
+    const { ID: id, title } = chatInfo;
 
-    const [amount, setAmount] = useState(2);
+    const imageUrl = 'https://picsum.photos/80';
+
+    const [amount, setAmount] = useState(20);
 
     const handleClick = () => {
-        console.log("click Frame");
+        onClickChat(id);
         setAmount(0);
     }
 
@@ -34,10 +33,10 @@ function ChatFrame() {
 
                 <div className="chat-frame-first-line">
                     <div className="chat-frame-name name-new-message">
-                        Jesus Campos
+                        {title}
                     </div>
                     <div className="chat-frame-date date-new-message">
-                        <span>1:13 p. m.</span>
+                        <span>{getCurrentTime()}</span>
                     </div>
                 </div>
 
@@ -63,4 +62,4 @@ function ChatFrame() {
     );
 }
 
-export default ChatFrame
+export default ChatFrame;
