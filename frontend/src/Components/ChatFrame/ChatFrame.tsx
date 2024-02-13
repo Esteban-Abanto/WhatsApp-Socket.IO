@@ -2,38 +2,42 @@ import { useState } from 'react'
 
 import { getCurrentTime } from '../../utils/timeUtils'
 
-import IChat from '../../interfaces/IChat'
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
+import { setCurrentChatID } from '../../redux/reducers/chatReducer';
 
 import "./ChatFrame.css";
 
 interface ChatFrameProps {
-    chatInfo: IChat;
-    onClickChat: (chatId: string) => void;
+    chatId: string;
 }
 
-function ChatFrame({ chatInfo, onClickChat }: ChatFrameProps) {
+function ChatFrame({ chatId }: ChatFrameProps) {
 
-    const { ID: id, title } = chatInfo;
+    const userMap = useAppSelector((state) => state.userReducer.userMap);
 
-    const imageUrl = 'https://picsum.photos/80';
+    const imgUrl = 'https://picsum.photos/80';
 
     const [amount, setAmount] = useState(20);
 
+    const dispatch = useAppDispatch();
+
     const handleClick = () => {
-        onClickChat(id);
+        dispatch(setCurrentChatID(chatId));
         setAmount(0);
     }
 
     return (
         <div className="chat-frame" onClick={handleClick}>
+
             <div className="chat-frame-cont-img">
-                <img className="chat-frame-img" src={imageUrl} alt="Img" />
+                <img className="chat-frame-img" src={imgUrl} alt="Img" />
             </div>
+
             <div className="chat-frame-info">
 
                 <div className="chat-frame-first-line">
                     <div className="chat-frame-name name-new-message">
-                        {title}
+                        {chatId === "global" ? "Chat Global" : (userMap[chatId]?.userName || "User disconnected")}
                     </div>
                     <div className="chat-frame-date date-new-message">
                         <span>{getCurrentTime()}</span>

@@ -1,146 +1,75 @@
-import { useState, useEffect } from 'react'
-import io from 'socket.io-client'
+import { useEffect } from 'react'
 
 import UserHeader from "./components/UserHeader";
 import ChatList from './components/ChatList'
 
 import CurrentChat from './components/CurrentChat';
 
-import IMessage from './interfaces/IMessage'
-import IUser from './interfaces/IUser'
-import IChat from './interfaces/IChat'
+import IMessage from './interfaces/IMessage';
+import IUser from './interfaces/IUser';
 
-const socket = io("http://localhost:4000");
+import { useAppSelector, useAppDispatch } from './redux/hooks';
+import { addNewMessage } from './redux/reducers/chatReducer';
+import { setUserMap, saveUser, setUserId, removeUser } from './redux/reducers/userReducer';
+
+import { configureSocket } from './services/Sockets/socketApi';
+
+const socket = configureSocket();
 
 function App() {
 
-    const [currentChatID, setCurrentChatID] = useState<string>('global');
+    const chatMap = useAppSelector((state) => state.chatReducer.chats);
+    const currentChatID = useAppSelector((state) => state.chatReducer.currentChatID);
+    const dispatch = useAppDispatch();
 
-    const [chatMap, setChatMap] = useState<{ [key: string]: IChat }>({
-        'global': {
-            ID: "global",
-            title: "Chat Global",
-            messages: []
-        }
-    });
-    // const [chatMap, setChatMap] = useState<Map<string, IChat>>(
-    //     new Map<string, IChat>([['global', {
-    //         ID: "global",
-    //         title: "Chat Global",
-    //         messages: []
-    //     }]])
-    // );
-
-    const addNewMessage = (chatId: string, message: IMessage) => {
-
-        // const updatedChatMap = { ...chatMap };
-        
-        // if (!updatedChatMap[chatId]) {
-        //     console.log("New Chat created");
-        //     updatedChatMap[chatId] = { ID: chatId, title: chatId, messages: [] };
-        // }
-
-        // updatedChatMap[chatId].messages.push(message);
-
-        // setChatMap(updatedChatMap);
-
-
-        setChatMap(prevChatMap => {
-            const updatedChatMap = { ...prevChatMap };
-            if (!updatedChatMap[chatId]) {
-                updatedChatMap[chatId] = { ID: chatId, title: chatId, messages: [] };
-            }
-
-            // updatedChatMap[chatId].messages.push(message);
-
-            updatedChatMap[chatId] = {
-                ...updatedChatMap[chatId],
-                messages: [...updatedChatMap[chatId].messages, message],
-            };
-            
-            return updatedChatMap;
-        });
-
-
-        // let chat = chatMap.get(chatId);
-
-        // if (!chat) {
-        //     console.log("nuevo chat creado");
-
-        //     chat = {
-        //         ID: chatId,
-        //         title: chatId,
-        //         messages: []
-        //     }
-        // }
-
-        // chat.messages = [...chat.messages, message];
-        // setChatMap(prevChatMap => new Map(prevChatMap.set(chatId, chat as IChat)));
-    };
-
-    const handleSendMessage = (textMessage: string) => {
-
-        const myMessage: IMessage = {
-            recipient: currentChatID,
-            text: textMessage,
-        };
-
-        addNewMessage(currentChatID, myMessage);
-        socket.emit('message', myMessage);
-    };
-
-    const handleClickName = (userId: string) => {
-        const chat: IChat = {
-            ID: userId,
-            title: userId,
-            messages: []
-        }
-
-        setChatMap(prevChatMap => ({ ...prevChatMap, [userId]: chat }));
-        setCurrentChatID(userId);
+    const onConnect = () => {
+        dispatch(setUserId(socket.id));
     };
 
     const receiveMessage = (message: IMessage) => {
-        console.log("Received Message");
-        console.log(chatMap[message.recipient]);
-        
-        addNewMessage(message.recipient, message);
+        dispatch(addNewMessage(message));
     };
 
-    const handleSetUserInfo = (info: IUser) => {
-        socket.emit('updateUserInfo', info);
+    const onUpdateUserInfo = (userInfo: IUser) => {
+        dispatch(saveUser(userInfo));
     };
 
-    const handlerTesting = () => {
-        console.log(currentChatID);
-        console.log(chatMap);
+    const initialUserMap = (users: IUser[]) => {
+        dispatch(setUserMap(users));
+    };
+
+    const onUserDisconnect = (userId: string) => {
+        dispatch(removeUser(userId));
     }
 
     useEffect(() => {
-        console.log("Holi");
-
+        socket.on('connect', onConnect);
+        socket.on('initialUserMap', initialUserMap);
         socket.on('message', receiveMessage);
+        socket.on('updateUserInfo', onUpdateUserInfo);
+        socket.on('onUserDisconnect', onUserDisconnect);
         return () => {
+            socket.off('connect', onConnect);
+            socket.off('initialUserMap', initialUserMap);
             socket.off('message', receiveMessage);
+            socket.off('updateUserInfo', onUpdateUserInfo);
+            socket.off('onUserDisconnect', onUserDisconnect);
         }
     }, [])
 
     return (
         <div className="w-100" style={{ height: "100vh", backgroundColor: "#0c1317" }}>
-            <div className="bg-secondary w-75 h-100 m-auto d-flex flex-row">
+            <div className="bg-secondary w-100 h-100 m-auto d-flex flex-row" style={{ maxWidth: "1440px" }}>
 
                 <div style={{ width: "480px" }}>
                     <div className="d-flex flex-column w-100 h-100" style={{ width: "480px" }}>
 
-                        <UserHeader onSetUserInfo={handleSetUserInfo} />
-                        <ChatList chatMap={chatMap} onClickChat={setCurrentChatID} />
-                        <button className='btn btn-primary' onClick={handlerTesting}> Hola </button>
-
+                        <UserHeader />
+                        <ChatList />
                     </div>
                 </div>
 
-                <CurrentChat chatInfo={chatMap[currentChatID]} onSendMessage={handleSendMessage} onClickName={handleClickName} />
-                {/* <CurrentChat chatInfo={chatMap.get(currentChatID)} onSendMessage={handleSendMessage} onClickName={handleClickName} /> */}
+                <CurrentChat chatInfo={chatMap[currentChatID]} />
             </div>
         </div>
     );

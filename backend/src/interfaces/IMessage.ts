@@ -1,8 +1,7 @@
-import IUser from './IUser';
 
 interface IMessage {
     recipient: string;
-    sender?: IUser;
+    senderId: string;
     text: string;
 }
 

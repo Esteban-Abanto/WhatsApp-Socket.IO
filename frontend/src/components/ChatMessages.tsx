@@ -4,10 +4,9 @@ import IMessage from '../interfaces/IMessage'
 
 interface ChatMessagesProps {
     messages: IMessage[];
-    onClickName: (userId: string) => void;
 }
 
-function ChatMessages({ messages, onClickName }: ChatMessagesProps) {
+function ChatMessages({ messages }: ChatMessagesProps) {
     return (
         <div className='flex-fill overflow-auto' style={{ backgroundColor: "#0c151b" }}>
             <div className='d-flex flex-column justify-content-end' style={{ minHeight: "100%" }}>
@@ -16,7 +15,6 @@ function ChatMessages({ messages, onClickName }: ChatMessagesProps) {
                     <RowMessage
                         key={index}
                         message={value}
-                        onClickName={onClickName}
                     />
                 ))}
             </div>

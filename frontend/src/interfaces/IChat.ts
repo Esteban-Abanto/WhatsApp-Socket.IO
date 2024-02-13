@@ -2,8 +2,7 @@
 import IMessage from './IMessage'
 
 interface IChat {
-    ID: string;
-    title: string;
+    id: string;
     messages: IMessage[];
 }
 

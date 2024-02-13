@@ -1,12 +1,20 @@
 import { useState } from 'react';
 
-interface ChatInputsProps {
-    onSendMessage: (message: string) => void;
-}
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
+import { addNewMessage } from '../../redux/reducers/chatReducer';
 
-function ChatInputs({ onSendMessage }: ChatInputsProps) {
+import { emitMessage } from '../../services/Sockets/socketApi';
 
-    const [message, setMessage] = useState('');
+import IMessage from '../../interfaces/IMessage';
+
+function ChatInputs() {
+
+    const currentChatID = useAppSelector((state) => state.chatReducer.currentChatID);
+    const myId = useAppSelector((state) => state.userReducer.myInfo.id);
+
+    const [txtMessage, setTxtMessage] = useState('');
+
+    const dispatch = useAppDispatch();
 
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -16,10 +24,18 @@ function ChatInputs({ onSendMessage }: ChatInputsProps) {
 
     const handleSendMessage = () => {
 
-        if (message.trim() == '') return;
+        if (txtMessage.trim() === '') return;
 
-        setMessage('');
-        onSendMessage(message.trim());
+        const message: IMessage = {
+            recipient: currentChatID,
+            senderId: myId,
+            text: txtMessage.trim(),
+        };
+        
+        dispatch(addNewMessage(message));
+        emitMessage(message);
+
+        setTxtMessage('');
     };
 
     const handleSendImage = () => {
@@ -40,8 +56,8 @@ function ChatInputs({ onSendMessage }: ChatInputsProps) {
                     name='text-message'
                     className="form-control"
                     placeholder='Enter a message...'
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    value={txtMessage}
+                    onChange={(e) => setTxtMessage(e.target.value)}
                     onKeyDown={handleKeyPress}
                 />
 

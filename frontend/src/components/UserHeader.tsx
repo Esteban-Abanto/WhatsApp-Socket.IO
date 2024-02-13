@@ -1,22 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react';
 
-import IUser from '../interfaces/IUser'
-import { generateRandomUserName } from "../utils/random";
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { setUserName } from '../redux/reducers/userReducer';
 
-interface UserHeaderProps {
-    onSetUserInfo: (info: IUser) => void;
-}
+import { generateRandomUrlImage } from "../utils/random";
 
-function UserHeader({ onSetUserInfo }: UserHeaderProps) {
+function UserHeader() {
 
-    const imgUrl = 'https://picsum.photos/id/237/40';
+    const userName = useAppSelector((state) => state.userReducer.myInfo.userName);
 
-    const [canEdit, setCanEdit] = useState(false);
-    const [userName, setUserName] = useState(generateRandomUserName);
+    const [imgUrl, setImgUrl] = useState(generateRandomUrlImage);
+    const [displayName, setDisplayName] = useState(userName);
 
-    useEffect(() => {
-        handlerSaveName();
-    }, []);
+    const dispatch = useAppDispatch();
 
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -26,26 +22,30 @@ function UserHeader({ onSetUserInfo }: UserHeaderProps) {
 
     const handlerSaveName = () => {
 
-        if (userName.trim() === '') {
+        if (displayName.trim() === '') {
             alert("UserName can't be empty");
-            setCanEdit(true);
             return;
         }
 
-        setUserName(userName.trim());
+        setDisplayName(displayName.trim());
+        dispatch(setUserName(displayName));
+    };
 
-        const info: IUser = {
-            userName: userName,
-        };
-
-        onSetUserInfo(info);
-        setCanEdit(false);
-    }
+    const handleClickImg = () => {
+        setImgUrl(generateRandomUrlImage());
+    };
 
     return (
         <header className="bg-dark d-flex flex-row align-items-center px-3 py-2">
 
-            <img className="me-3 rounded-circle" src={imgUrl} style={{ width: "40px" }} />
+            <img
+                role='button'
+                className="me-3 rounded-circle"
+                alt='Client Img'
+                src={imgUrl}
+                style={{ width: "40px" }}
+                onClick={handleClickImg}
+            />
 
             <div className="input-group">
 
@@ -54,24 +54,16 @@ function UserHeader({ onSetUserInfo }: UserHeaderProps) {
                     name='user-name'
                     className="form-control"
                     placeholder="Username"
-                    onChange={(e) => setUserName(e.target.value)}
-                    value={userName}
-                    readOnly={!canEdit}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    value={displayName}
+                    maxLength={20}
                     draggable="false"
                     onKeyDown={handleKeyPress}
                 />
 
-                {!canEdit && (
-                    <button className="btn btn-outline-secondary" onClick={() => { setCanEdit(true); }}>
-                        <i className="bi bi-pencil-square"></i>
-                    </button>
-                )}
-
-                {canEdit && (
-                    <button className="btn btn-outline-secondary" onClick={handlerSaveName}>
-                        <i className="bi bi-cloud-arrow-down"></i>
-                    </button>
-                )}
+                <button className="btn btn-outline-secondary" onClick={handlerSaveName}>
+                    <i className="bi bi-cloud-arrow-down"></i>
+                </button>
 
             </div>
         </header>

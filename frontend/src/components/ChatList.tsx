@@ -1,14 +1,10 @@
-import ChatFrame from './ChatFrame/ChatFrame'
+import { useAppSelector } from './../redux/hooks';
 
-import IChat from '../interfaces/IChat'
+import ChatFrame from './ChatFrame/ChatFrame';
 
-interface ChatListProps {
-    chatMap: { [key: string]: IChat };
-    onClickChat: (chatId: string) => void;
-}
+function ChatList() {
 
-function ChatList({ chatMap, onClickChat }: ChatListProps) {
-
+    const chatMap = useAppSelector((state) => state.chatReducer.chats);
     const chatIds  = Object.keys(chatMap);
 
     return (
@@ -18,7 +14,7 @@ function ChatList({ chatMap, onClickChat }: ChatListProps) {
 
                 {chatIds.map((chatId, index) => (
 
-                    <ChatFrame key={index} chatInfo={chatMap[chatId]} onClickChat={onClickChat} />
+                    <ChatFrame key={index} chatId={chatId} />
 
                 ))}
 

@@ -1,16 +1,15 @@
 import ChatHeader from './ChatHeader';
 import ChatMessages from './ChatMessages';
-import ChatInputs from './ChatInputs';
+import ChatInputs from './CurrentChat/ChatInputs';
+import DisconnectedMessage from "./CurrentChat/DisconnectedMessage";
 
 import IChat from '../interfaces/IChat';
 
 interface CurrentChatProps {
     chatInfo?: IChat;
-    onSendMessage: (message: string) => void;
-    onClickName: (userId: string) => void;
 }
 
-function CurrentChat({ chatInfo, onSendMessage, onClickName }: CurrentChatProps) {
+function CurrentChat({ chatInfo }: CurrentChatProps) {
 
     return (
         <div className="flex-fill border-start">
@@ -18,9 +17,12 @@ function CurrentChat({ chatInfo, onSendMessage, onClickName }: CurrentChatProps)
 
                 {chatInfo && (
                     <>
-                        <ChatHeader title={chatInfo.title} />
-                        <ChatMessages messages={chatInfo.messages} onClickName={onClickName} />
-                        <ChatInputs onSendMessage={onSendMessage} />
+                        <ChatHeader chatId={chatInfo.id} />
+                        <ChatMessages messages={chatInfo.messages} />
+
+
+                        <ChatInputs />
+                        <DisconnectedMessage />
                     </>
                 )}
 

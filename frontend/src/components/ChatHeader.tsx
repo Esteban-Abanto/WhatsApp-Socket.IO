@@ -1,19 +1,29 @@
+import { useAppSelector } from '../redux/hooks';
 
 interface ChatHeaderProps {
-    title: string;
+    chatId: string;
 }
 
-function ChatHeader({ title }: ChatHeaderProps) {
+function ChatHeader({ chatId }: ChatHeaderProps) {
+
+    const userMap = useAppSelector((state) => state.userReducer.userMap);
 
     const imgUrl = 'https://picsum.photos/id/0/50';
 
     return (
         <header className="bg-dark d-flex flex-row align-items-center px-3 py-2">
 
-            <img className="rounded-circle me-3" src={imgUrl} style={{ width: "40px" }} />
+            <img
+                className="rounded-circle me-3"
+                alt='Chat Img'
+                src={imgUrl}
+                style={{ width: "40px" }}
+            />
 
             <div className="flex-fill text-light">
-                <span> {title} </span>
+                <span>
+                    {chatId === "global" ? "Chat Global" : (userMap[chatId]?.userName || "User disconnected")}
+                </span>
             </div>
 
             <button type="button" className="btn btn-secondary">

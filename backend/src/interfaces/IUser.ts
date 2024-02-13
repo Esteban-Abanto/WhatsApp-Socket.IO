@@ -1,6 +1,6 @@
 
 interface IUser {
-    ID?: string,
+    id: string,
     userName: string,
     // imgUrl: string
 }
