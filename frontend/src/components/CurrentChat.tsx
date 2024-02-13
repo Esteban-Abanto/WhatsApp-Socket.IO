@@ -1,15 +1,25 @@
-import ChatHeader from './ChatHeader';
-import ChatMessages from './ChatMessages';
+import { useAppSelector } from '../redux/hooks';
+
+import ChatHeader from './CurrentChat/ChatHeader';
+import ChatMessages from './CurrentChat/ChatMessages';
 import ChatInputs from './CurrentChat/ChatInputs';
 import DisconnectedMessage from "./CurrentChat/DisconnectedMessage";
 
 import IChat from '../interfaces/IChat';
 
 interface CurrentChatProps {
-    chatInfo?: IChat;
+    chatInfo: IChat;
 }
 
 function CurrentChat({ chatInfo }: CurrentChatProps) {
+
+    const { id, messages } = chatInfo;
+    const userMap = useAppSelector((state) => state.userReducer.userMap);
+
+    const getChatTitle = () => {
+        if (id === "global") return "Chat Global";
+        return userMap[id]?.userName || "User disconnected";
+    }
 
     return (
         <div className="flex-fill border-start">
@@ -17,12 +27,16 @@ function CurrentChat({ chatInfo }: CurrentChatProps) {
 
                 {chatInfo && (
                     <>
-                        <ChatHeader chatId={chatInfo.id} />
-                        <ChatMessages messages={chatInfo.messages} />
+                        <ChatHeader title={getChatTitle()} />
+                        <ChatMessages messages={messages} />
 
+                        {(userMap[id] || id === "global") && (
+                            <ChatInputs />
+                        )}
 
-                        <ChatInputs />
-                        <DisconnectedMessage />
+                        {!userMap[id] && id !== "global" && (
+                            <DisconnectedMessage />
+                        )}
                     </>
                 )}
 

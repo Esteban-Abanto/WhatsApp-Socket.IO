@@ -18,7 +18,7 @@ const socket = configureSocket();
 
 function App() {
 
-    const chatMap = useAppSelector((state) => state.chatReducer.chats);
+    const chatMap = useAppSelector((state) => state.chatReducer.chatMap);
     const currentChatID = useAppSelector((state) => state.chatReducer.currentChatID);
     const dispatch = useAppDispatch();
 

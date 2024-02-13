@@ -1,12 +1,9 @@
-import { useAppSelector } from '../redux/hooks';
 
 interface ChatHeaderProps {
-    chatId: string;
+    title: string;
 }
 
-function ChatHeader({ chatId }: ChatHeaderProps) {
-
-    const userMap = useAppSelector((state) => state.userReducer.userMap);
+function ChatHeader({ title }: ChatHeaderProps) {
 
     const imgUrl = 'https://picsum.photos/id/0/50';
 
@@ -22,7 +19,7 @@ function ChatHeader({ chatId }: ChatHeaderProps) {
 
             <div className="flex-fill text-light">
                 <span>
-                    {chatId === "global" ? "Chat Global" : (userMap[chatId]?.userName || "User disconnected")}
+                    {title}
                 </span>
             </div>
 

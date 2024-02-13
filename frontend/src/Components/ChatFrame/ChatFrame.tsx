@@ -2,23 +2,22 @@ import { useState } from 'react'
 
 import { getCurrentTime } from '../../utils/timeUtils'
 
-import { useAppSelector, useAppDispatch } from '../../redux/hooks';
+import { useAppDispatch } from '../../redux/hooks';
 import { setCurrentChatID } from '../../redux/reducers/chatReducer';
 
 import "./ChatFrame.css";
 
 interface ChatFrameProps {
     chatId: string;
+    title: string;
+    lastMessage: string;
 }
 
-function ChatFrame({ chatId }: ChatFrameProps) {
-
-    const userMap = useAppSelector((state) => state.userReducer.userMap);
+function ChatFrame({ chatId, title, lastMessage }: ChatFrameProps) {
 
     const imgUrl = 'https://picsum.photos/80';
 
     const [amount, setAmount] = useState(20);
-
     const dispatch = useAppDispatch();
 
     const handleClick = () => {
@@ -37,7 +36,7 @@ function ChatFrame({ chatId }: ChatFrameProps) {
 
                 <div className="chat-frame-first-line">
                     <div className="chat-frame-name name-new-message">
-                        {chatId === "global" ? "Chat Global" : (userMap[chatId]?.userName || "User disconnected")}
+                        {title}
                     </div>
                     <div className="chat-frame-date date-new-message">
                         <span>{getCurrentTime()}</span>
@@ -47,7 +46,7 @@ function ChatFrame({ chatId }: ChatFrameProps) {
                 <div className="chat-frame-first-line">
 
                     <div className="chat-frame-message">
-                        Menos mal me avisaste cholo, gracias :,v mejor lo traigo de Amazon
+                        {lastMessage}
                     </div>
 
                     {amount !== 0 && (

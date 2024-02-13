@@ -4,8 +4,20 @@ import ChatFrame from './ChatFrame/ChatFrame';
 
 function ChatList() {
 
-    const chatMap = useAppSelector((state) => state.chatReducer.chats);
-    const chatIds  = Object.keys(chatMap);
+    const chatMap = useAppSelector((state) => state.chatReducer.chatMap);
+    const userMap = useAppSelector((state) => state.userReducer.userMap);
+
+    const chatIds = Object.keys(chatMap);
+
+    const getChatTitle = (chatId: string) => {
+        if (chatId === "global") return "Chat Global";
+        return userMap[chatId]?.userName || "User disconnected";
+    }
+
+    const getLastMessage = (chatId: string) => {
+        const messages = chatMap[chatId].messages;
+        return messages[messages.length - 1]?.text
+    }
 
     return (
 
@@ -14,8 +26,12 @@ function ChatList() {
 
                 {chatIds.map((chatId, index) => (
 
-                    <ChatFrame key={index} chatId={chatId} />
-
+                    <ChatFrame
+                        key={index}
+                        chatId={chatId}
+                        title={getChatTitle(chatId)}
+                        lastMessage={getLastMessage(chatId)}
+                    />
                 ))}
 
             </div>

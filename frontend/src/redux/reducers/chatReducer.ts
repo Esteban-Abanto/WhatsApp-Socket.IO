@@ -6,14 +6,14 @@ import IMessage from '../../interfaces/IMessage';
 
 interface IChatMap {
     currentChatID: string,
-    chats: {
+    chatMap: {
         [key: string]: IChat
     }
 }
 
 const initialState: IChatMap = {
     currentChatID: 'global',
-    chats: {
+    chatMap: {
         'global': {
             id: "global",
             messages: []
@@ -32,12 +32,12 @@ export const chatMap = createSlice({
         createChat: (state, action: PayloadAction<string>) => {
 
             const userId = action.payload;
-            const updatedChatMap = { ...state.chats };
+            const updatedChatMap = { ...state.chatMap };
             if (!updatedChatMap[userId]) {
                 updatedChatMap[userId] = { id: userId, messages: [] };
             }
 
-            state.chats = updatedChatMap;
+            state.chatMap = updatedChatMap;
             state.currentChatID = userId;
         },
 
@@ -45,7 +45,7 @@ export const chatMap = createSlice({
 
             const chatId = action.payload.recipient;
 
-            const updatedChatMap = { ...state.chats };
+            const updatedChatMap = { ...state.chatMap };
             if (!updatedChatMap[chatId]) {
                 updatedChatMap[chatId] = { id: chatId, messages: [] };
             }
@@ -55,7 +55,7 @@ export const chatMap = createSlice({
                 messages: [...updatedChatMap[chatId].messages, action.payload],
             };
 
-            state.chats = updatedChatMap;
+            state.chatMap = updatedChatMap;
         }
     }
 });
