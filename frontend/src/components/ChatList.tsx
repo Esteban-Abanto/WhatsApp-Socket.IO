@@ -31,6 +31,7 @@ function ChatList() {
                         chatId={chatId}
                         title={getChatTitle(chatId)}
                         lastMessage={getLastMessage(chatId)}
+                        unreadMessages={chatMap[chatId].unreadMessages}
                     />
                 ))}
 

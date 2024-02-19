@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { setUserName } from '../redux/reducers/userReducer';
@@ -11,6 +11,8 @@ function UserHeader() {
 
     const [imgUrl, setImgUrl] = useState(generateRandomUrlImage);
     const [displayName, setDisplayName] = useState(userName);
+
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const dispatch = useAppDispatch();
 
@@ -35,6 +37,13 @@ function UserHeader() {
         setImgUrl(generateRandomUrlImage());
     };
 
+    const handleInputClick = () => {
+
+        if (inputRef.current) {
+            inputRef.current.select();
+        }
+    };
+
     return (
         <header className="bg-dark d-flex flex-row align-items-center px-3 py-2">
 
@@ -50,6 +59,7 @@ function UserHeader() {
             <div className="input-group">
 
                 <input
+                    ref={inputRef}
                     type="text"
                     name='user-name'
                     className="form-control"
@@ -59,6 +69,9 @@ function UserHeader() {
                     maxLength={20}
                     draggable="false"
                     onKeyDown={handleKeyPress}
+                    onClick={handleInputClick}
+                    autoComplete="off"
+                    spellCheck={false}
                 />
 
                 <button className="btn btn-outline-secondary" onClick={handlerSaveName}>

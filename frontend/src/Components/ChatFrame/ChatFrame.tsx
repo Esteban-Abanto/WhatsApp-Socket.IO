@@ -1,28 +1,26 @@
-import { useState } from 'react'
-
 import { getCurrentTime } from '../../utils/timeUtils'
 
 import { useAppDispatch } from '../../redux/hooks';
-import { setCurrentChatID } from '../../redux/reducers/chatReducer';
+import { setCurrentChatID, resetUnreadMessages } from '../../redux/reducers/chatReducer';
 
 import "./ChatFrame.css";
 
 interface ChatFrameProps {
     chatId: string;
     title: string;
+    unreadMessages: number;
     lastMessage: string;
 }
 
-function ChatFrame({ chatId, title, lastMessage }: ChatFrameProps) {
+function ChatFrame({ chatId, title, unreadMessages, lastMessage }: ChatFrameProps) {
 
     const imgUrl = 'https://picsum.photos/80';
 
-    const [amount, setAmount] = useState(20);
     const dispatch = useAppDispatch();
 
     const handleClick = () => {
         dispatch(setCurrentChatID(chatId));
-        setAmount(0);
+        dispatch(resetUnreadMessages(chatId));
     }
 
     return (
@@ -49,11 +47,11 @@ function ChatFrame({ chatId, title, lastMessage }: ChatFrameProps) {
                         {lastMessage}
                     </div>
 
-                    {amount !== 0 && (
+                    {unreadMessages !== 0 && (
                         <div className="chat-frame-cont-number">
                             <div className="chat-frame-number">
                                 <span>
-                                    {amount}
+                                    {unreadMessages}
                                 </span>
                             </div>
                         </div>
