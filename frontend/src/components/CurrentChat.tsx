@@ -16,9 +16,14 @@ function CurrentChat({ chatInfo }: CurrentChatProps) {
     const { id, messages } = chatInfo;
     const userMap = useAppSelector((state) => state.userReducer.userMap);
 
-    const getChatTitle = () => {
-        if (id === "global") return "Chat Global";
-        return userMap[id]?.userName || "User disconnected";
+    const getChatImgId = (chatId: string) => {
+        if (chatId === "global") return 1;
+        return userMap[chatId]?.imgId || 0;
+    }
+
+    const getChatTitle = (chatId: string) => {
+        if (chatId === "global") return "Chat Global";
+        return userMap[chatId]?.userName || "User disconnected";
     }
 
     return (
@@ -27,7 +32,7 @@ function CurrentChat({ chatInfo }: CurrentChatProps) {
 
                 {chatInfo && (
                     <>
-                        <ChatHeader title={getChatTitle()} />
+                        <ChatHeader title={getChatTitle(id)} imgId={getChatImgId(id)} />
                         <ChatMessages messages={messages} />
 
                         {(userMap[id] || id === "global") && (

@@ -1,8 +1,8 @@
 
 interface IUser {
-    id: string,
-    userName: string,
-    // imgUrl: string
+    id: string;
+    imgId: number;
+    userName: string;
 }
 
 export default IUser;

@@ -1,6 +1,8 @@
-import express from 'express'
-import http from 'http'
-import { Server as SocketServer } from 'socket.io'
+import express from 'express';
+import http from 'http';
+import { Server as SocketServer } from 'socket.io';
+
+import path from 'path';
 
 const app = express()
 const server = http.createServer(app)
@@ -9,6 +11,11 @@ const io = new SocketServer(server, {
         origin: "http://localhost:3000"
     }
 })
+
+
+// Aquí configuramos Express para servir archivos estáticos
+app.use(express.static(path.join(__dirname, 'public'))); // Ajusta la ruta según tu estructura de directorios
+
 
 const connectedClients = new Map();
 

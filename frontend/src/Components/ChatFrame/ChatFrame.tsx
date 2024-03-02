@@ -3,18 +3,19 @@ import { getCurrentTime } from '../../utils/timeUtils'
 import { useAppDispatch } from '../../redux/hooks';
 import { setCurrentChatID, resetUnreadMessages } from '../../redux/reducers/chatReducer';
 
+import { getImageUrlById } from "../../utils/utils";
+
 import "./ChatFrame.css";
 
 interface ChatFrameProps {
     chatId: string;
     title: string;
+    imgId: number;
     unreadMessages: number;
     lastMessage: string;
 }
 
-function ChatFrame({ chatId, title, unreadMessages, lastMessage }: ChatFrameProps) {
-
-    const imgUrl = 'https://picsum.photos/80';
+function ChatFrame({ chatId, title, imgId, unreadMessages, lastMessage }: ChatFrameProps) {
 
     const dispatch = useAppDispatch();
 
@@ -27,7 +28,7 @@ function ChatFrame({ chatId, title, unreadMessages, lastMessage }: ChatFrameProp
         <div className="chat-frame" onClick={handleClick}>
 
             <div className="chat-frame-cont-img">
-                <img className="chat-frame-img" src={imgUrl} alt="Img" />
+                <img className="chat-frame-img" src={getImageUrlById(imgId, 80)} alt="Img" />
             </div>
 
             <div className="chat-frame-info">

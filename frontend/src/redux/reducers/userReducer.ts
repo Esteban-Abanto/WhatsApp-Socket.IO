@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 import { updateUserInfo } from '../../services/Sockets/socketApi';
 
-import { generateRandomUserName } from '../../utils/random';
+import { generateRandomImageId, generateRandomUserName } from '../../utils/random';
 
 import IUser from '../../interfaces/IUser';
 
@@ -15,6 +15,7 @@ interface IUserMap {
 const initialState: IUserMap = {
     myInfo: {
         id: '',
+        imgId: generateRandomImageId(),
         userName: generateRandomUserName()
     },
     userMap: {},
@@ -26,9 +27,6 @@ export const userSlice = createSlice({
     reducers: {
 
         setUserMap: (state, action: PayloadAction<IUser[]>) => {
-
-            console.log(action.payload);
-
             const userMap: { [key: string]: IUser } = {};
             action.payload.forEach((userInfo) => {
                 userMap[userInfo.id] = userInfo;
@@ -37,9 +35,6 @@ export const userSlice = createSlice({
         },
 
         saveUser: (state, action: PayloadAction<IUser>) => {
-
-            console.log(action.payload);
-
             const { id } = action.payload;
             state.userMap[id] = action.payload;
         },
@@ -48,7 +43,6 @@ export const userSlice = createSlice({
             const userId = action.payload;
             if (state.userMap.hasOwnProperty(userId)) {
                 delete state.userMap[userId];
-                console.log(`user remove: ${userId}`);
             }
         },
 
@@ -56,21 +50,21 @@ export const userSlice = createSlice({
         setUserId: (state, action: PayloadAction<string>) => {
             state.myInfo.id = action.payload;
             updateUserInfo(state.myInfo);
+        },
+        setUserImgId: (state, action: PayloadAction<number>) => {
+            console.log(action.payload);
             
-            console.log(state.myInfo);
-
+            state.myInfo.imgId = action.payload;
+            updateUserInfo(state.myInfo);
         },
         setUserName: (state, action: PayloadAction<string>) => {
             state.myInfo.userName = action.payload;
             updateUserInfo(state.myInfo);
-
-            console.log(state.myInfo);
-
         },
     }
 });
 
 
-export const { setUserMap, saveUser, removeUser, setUserId, setUserName } = userSlice.actions;
+export const { setUserMap, saveUser, removeUser, setUserId, setUserImgId, setUserName } = userSlice.actions;
 
 export default userSlice.reducer;

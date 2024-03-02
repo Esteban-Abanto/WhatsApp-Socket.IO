@@ -9,6 +9,11 @@ function ChatList() {
 
     const chatIds = Object.keys(chatMap);
 
+    const getChatImgId = (chatId: string) => {
+        if (chatId === "global") return 1;
+        return userMap[chatId]?.imgId || 0;
+    }
+
     const getChatTitle = (chatId: string) => {
         if (chatId === "global") return "Chat Global";
         return userMap[chatId]?.userName || "User disconnected";
@@ -29,6 +34,7 @@ function ChatList() {
                     <ChatFrame
                         key={index}
                         chatId={chatId}
+                        imgId={getChatImgId(chatId)}
                         title={getChatTitle(chatId)}
                         lastMessage={getLastMessage(chatId)}
                         unreadMessages={chatMap[chatId].unreadMessages}

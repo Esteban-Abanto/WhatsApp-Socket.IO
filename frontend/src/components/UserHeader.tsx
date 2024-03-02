@@ -1,16 +1,17 @@
 import { useState, useRef } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
-import { setUserName } from '../redux/reducers/userReducer';
+import { setUserImgId, setUserName } from '../redux/reducers/userReducer';
 
-import { generateRandomUrlImage } from "../utils/random";
+import { generateRandomImageId } from "../utils/random";
+import { getImageUrlById } from "../utils/utils";
 
 function UserHeader() {
 
-    const userName = useAppSelector((state) => state.userReducer.myInfo.userName);
+    const userInfo = useAppSelector((state) => state.userReducer.myInfo);
 
-    const [imgUrl, setImgUrl] = useState(generateRandomUrlImage);
-    const [displayName, setDisplayName] = useState(userName);
+    const [imgId, setImgId] = useState<number>(userInfo.imgId);
+    const [displayName, setDisplayName] = useState<string>(userInfo.userName);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -30,11 +31,13 @@ function UserHeader() {
         }
 
         setDisplayName(displayName.trim());
-        dispatch(setUserName(displayName));
+        dispatch(setUserName(displayName.trim()));         //Update userInfo
     };
 
     const handleClickImg = () => {
-        setImgUrl(generateRandomUrlImage());
+        const currentImgId = generateRandomImageId();
+        setImgId(currentImgId)
+        dispatch(setUserImgId(currentImgId));
     };
 
     const handleInputClick = () => {
@@ -51,7 +54,7 @@ function UserHeader() {
                 role='button'
                 className="me-3 rounded-circle"
                 alt='Client Img'
-                src={imgUrl}
+                src={getImageUrlById(imgId, 40)}
                 style={{ width: "40px" }}
                 onClick={handleClickImg}
             />

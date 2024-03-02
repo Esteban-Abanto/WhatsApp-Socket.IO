@@ -1,11 +1,12 @@
 
+import { getImageUrlById } from "../../utils/utils";
+
 interface ChatHeaderProps {
     title: string;
+    imgId: number;
 }
 
-function ChatHeader({ title }: ChatHeaderProps) {
-
-    const imgUrl = 'https://picsum.photos/id/0/50';
+function ChatHeader({ title, imgId }: ChatHeaderProps) {
 
     return (
         <header className="bg-dark d-flex flex-row align-items-center px-3 py-2">
@@ -13,7 +14,7 @@ function ChatHeader({ title }: ChatHeaderProps) {
             <img
                 className="rounded-circle me-3"
                 alt='Chat Img'
-                src={imgUrl}
+                src={getImageUrlById(imgId, 50)}
                 style={{ width: "40px" }}
             />
 
