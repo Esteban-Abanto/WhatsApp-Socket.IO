@@ -3,7 +3,7 @@ import io, { Socket } from 'socket.io-client';
 import IUser from "../../interfaces/IUser";
 import IMessage from "../../interfaces/IMessage";
 
-const URL_SERVER: string = 'http://localhost:4000';
+const URL_SERVER: string = '/';
 
 // Constantes para los eventos
 const EVENTS = {

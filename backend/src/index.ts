@@ -6,16 +6,10 @@ import path from 'path';
 
 const app = express()
 const server = http.createServer(app)
-const io = new SocketServer(server, {
-    cors: {
-        origin: "http://localhost:3000"
-    }
-})
-
+const io = new SocketServer(server)
 
 // Aquí configuramos Express para servir archivos estáticos
-app.use(express.static(path.join(__dirname, 'public'))); // Ajusta la ruta según tu estructura de directorios
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 const connectedClients = new Map();
 
@@ -55,7 +49,7 @@ io.on(EVENTS.CONNECTION, socket => {
 
         const { recipient, text } = message;
 
-        console.log(recipient, text);
+        console.log(`${recipient}: ${text}`);
 
         if (recipient !== 'global') {
 
@@ -91,6 +85,8 @@ io.on(EVENTS.CONNECTION, socket => {
     });
 })
 
-server.listen(4000, () => {
-    console.log("Server on port 4000")
-})
+const port = process.env.PORT || 4000;
+server.listen(port, () => {
+    console.log(`Server on port ${port}`);
+    console.log(__dirname);
+});
